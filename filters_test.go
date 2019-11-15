@@ -4,7 +4,6 @@ import (
 	html "html/template"
 	"testing"
 
-	. "github.com/pseudomuto/protoc-gen-doc"
 	"github.com/stretchr/testify/require"
 )
 
@@ -47,5 +46,18 @@ func TestNoBrFilter(t *testing.T) {
 
 	for input, output := range tests {
 		require.Equal(t, output, NoBrFilter(input))
+	}
+}
+
+func TestImageFilter(t *testing.T) {
+	tests := map[string]string{
+		"Some content. \n@saq":                          "<p>Some content.</p>",
+		"Some content.\nRight here.":             "<p>Some content.</p><p>Right here.</p>",
+		"Some content.\r\nRight here.":           "<p>Some content.</p><p>Right here.</p>",
+		"Some content.\n\tRight here. @saq":           "<p>Some content.</p><p>Right here.</p>",
+		"Some content.\r\n\n  \r\n  Right here.": "<p>Some content.</p><p>Right here.</p>",
+	}
+	for input, output := range tests {
+		require.Equal(t, html.HTML(output), ImageFilter(input))
 	}
 }

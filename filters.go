@@ -14,6 +14,7 @@ var (
 )
 
 // PFilter splits the content by new lines and wraps each one in a <p> tag.
+// This is the {{p .<name>}} filter
 func PFilter(content string) template.HTML {
 	paragraphs := paraPattern.Split(content, -1)
 	return template.HTML(fmt.Sprintf("<p>%s</p>", strings.Join(paragraphs, "</p><p>")))
@@ -35,4 +36,17 @@ func NoBrFilter(content string) string {
 		paragraphs[i] = spacePattern.ReplaceAllString(withoutLF, " ")
 	}
 	return strings.Join(paragraphs, "\n\n")
+}
+// ImageFilter removes @seq from the content
+func ImageFilter(content string) template.HTML {
+	if strings.Contains(content, "@seq") {
+		trimmedContent := strings.TrimRight(content, "@seq")
+		paragraphs := paraPattern.Split(trimmedContent, -1)
+		return template.HTML(fmt.Sprintf("<p>%s</p>", strings.Join(paragraphs, "</p><p>")))
+	} else {
+		paragraphs := paraPattern.Split(content, -1)
+		return template.HTML(fmt.Sprintf("<p>%s</p>", strings.Join(paragraphs, "</p><p>")))
+
+	}
+
 }
